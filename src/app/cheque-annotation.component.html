@@ -1,0 +1,35 @@
+@if (chequeConfig) {
+  <div class="cheque-wrapper">
+    <div
+      class="cheque-container"
+      [style.width.px]="chequeConfig.width"
+      [style.height.px]="chequeConfig.height"
+    >
+      <img
+        [src]="'assets/' + chequeConfig.imageName"
+        [style.width.px]="chequeConfig.width"
+        [style.height.px]="chequeConfig.height"
+        [alt]="chequeConfig.imageId"
+        class="cheque-image"
+      />
+      @for (box of chequeConfig.boxes; track box.Label) {
+        @if (chequeDetails[box.Label]) {
+          <div
+            class="annotation-box"
+            [style.left.px]="box.xtl"
+            [style.top.px]="box.ytl"
+            [style.width.px]="box.xbr - box.xtl"
+            [style.height.px]="box.ybr - box.ytl"
+            [style.font-family]="box.FontFamily || chequeConfig.defaultFontFamily"
+            [style.font-size.px]="box.FontSize || chequeConfig.defaultFontSize"
+            [style.font-weight]="box.FontWeight || chequeConfig.defaultFontWeight"
+            [style.color]="box.TextColor || chequeConfig.defaultTextColor"
+          >
+            {{ chequeDetails[box.Label] }}
+          </div>
+        }
+      }
+    </div>
+    <button class="print-button" (click)="printCheque()">Print Cheque</button>
+  </div>
+}
