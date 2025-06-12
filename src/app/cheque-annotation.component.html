@@ -1,15 +1,41 @@
 @if (chequeConfig) {
   <div class="cheque-wrapper">
+    <div class="config-panel">
+      <h3>Cheque Configuration</h3>
+      <div class="config-controls">
+        <div class="config-control">
+          <label>
+            <input 
+              type="checkbox" 
+              [checked]="chequeDetails['check-crossing']" 
+              (change)="toggleCrossing($event)"
+            >
+            Enable Crossing
+          </label>
+        </div>
+        <div class="config-control">
+          <label>
+            <input 
+              type="checkbox" 
+              [checked]="printOnA4" 
+              (change)="toggleA4Printing($event)"
+            >
+            Print on A4 (Bottom Position)
+          </label>
+        </div>
+      </div>
+    </div>
+
     <div
       class="cheque-container"
-      [style.width.px]="chequeConfig.width"
-      [style.height.px]="chequeConfig.height"
+      [style.width.px]="chequeConfig.imageWidth"
+      [style.height.px]="chequeConfig.imageHeight"
     >
       <img
-        [src]="'assets/' + chequeConfig.imageName"
-        [style.width.px]="chequeConfig.width"
-        [style.height.px]="chequeConfig.height"
-        [alt]="chequeConfig.imageId"
+        [src]="chequeConfig.imageUrl"
+        [style.width.px]="chequeConfig.imageWidth"
+        [style.height.px]="chequeConfig.imageHeight"
+        [alt]="chequeConfig.bankName + ' ' + chequeConfig.modelName"
         class="cheque-image"
       />
       @for (box of chequeConfig.boxes; track box.Label) {
@@ -21,11 +47,11 @@
             [style.width.px]="box.xbr - box.xtl"
             [style.height.px]="box.ybr - box.ytl"
             [style.font-family]="box.FontFamily || chequeConfig.defaultFontFamily"
-            [style.font-size.px]="box.FontSize || chequeConfig.defaultFontSize"
+            [style.font-size.px]="getFontSize(box.Label)"
             [style.font-weight]="box.FontWeight || chequeConfig.defaultFontWeight"
             [style.color]="box.TextColor || chequeConfig.defaultTextColor"
           >
-            {{ chequeDetails[box.Label] }}
+            {{ getDisplayValue(box.Label, chequeDetails[box.Label]) }}
           </div>
         }
       }

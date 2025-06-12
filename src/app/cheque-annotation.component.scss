@@ -6,6 +6,52 @@
   padding: 20px;
 }
 
+.font-size-controls {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+
+  h3 {
+    margin: 0 0 15px 0;
+    color: #495057;
+    font-size: 16px;
+  }
+}
+
+.font-size-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  span {
+    min-width: 120px;
+    font-size: 14px;
+    color: #495057;
+  }
+
+  button {
+    padding: 4px 8px;
+    font-size: 14px;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #dee2e6;
+    }
+
+    &:active {
+      background-color: #ced4da;
+    }
+  }
+}
+
 .cheque-container {
   position: relative;
   display: inline-block;
@@ -42,6 +88,7 @@
   justify-content: flex-start;
   align-items: flex-start;
 }
+
 .label {
   background: rgba(255,255,255,0.7);
   font-size: 14px;
@@ -51,6 +98,7 @@
   left: 0;
   font-weight: 500;
 }
+
 .cheque-value {
   margin-top: 2px;
   background: rgba(255,255,255,0.85);
@@ -64,6 +112,43 @@
   font-weight: 500;
 }
 
+.config-panel {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+
+  h3 {
+    margin: 0 0 15px 0;
+    color: #495057;
+    font-size: 16px;
+  }
+}
+
+.config-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #495057;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+}
+
 /* Print-specific styles */
 @media print {
   /* Reset all margins and padding */
@@ -71,54 +156,74 @@
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   /* Hide non-printable elements */
   .print-button,
   .label,
-  .cheque-image {
+  .cheque-image,
+  .font-size-controls {
     display: none !important;
   }
 
   /* Page setup */
   @page {
-    size: 175mm 75mm; /* Standard cheque size */
-    margin: 0;
+    size: 175mm 75mm !important; /* Standard cheque size */
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* Body setup */
   body {
-    width: 175mm;
-    height: 75mm;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+    width: 175mm !important;
+    height: 75mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   /* Cheque container setup */
   .cheque-container {
     width: 175mm !important;
     height: 75mm !important;
-    position: relative;
-    page-break-inside: avoid;
-    page-break-after: avoid;
-    page-break-before: avoid;
+    position: relative !important;
+    page-break-inside: avoid !important;
+    page-break-after: avoid !important;
+    page-break-before: avoid !important;
+    transform: none !important;
+    transform-origin: top left !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   /* Image setup */
   .cheque-container img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: contain;
-    position: absolute;
-    top: 0;
-    left: 0;
+    object-fit: contain !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   /* Annotation boxes setup */
   .annotation-box {
     border: none !important;
-    position: absolute;
+    position: absolute !important;
+    background: none !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   /* Cheque values setup */
@@ -127,21 +232,33 @@
     color: #000 !important;
     font-size: 16px !important;
     padding: 0 !important;
-    position: absolute;
-    white-space: nowrap;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    position: absolute !important;
+    white-space: nowrap !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   /* Force background colors and images to print */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 
   /* Prevent any scaling */
   html, body {
     zoom: 1 !important;
     transform: none !important;
+    -webkit-transform: none !important;
+    -moz-transform: none !important;
+    -ms-transform: none !important;
+  }
+
+  /* Ensure proper color printing */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
   }
 }

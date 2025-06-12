@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
+export type ChequeField = 'check-no' | 'check-suppliername' | 'check-amount' | 'check-amount-words' | 'check-micr' | 'check-date' | 'check-signature' | 'check_debitor' | 'check-crossing';
+
 export interface ChequeBox {
-  Label: string;
+  Label: ChequeField;
   xtl: number;
   ytl: number;
   xbr: number;
@@ -14,10 +16,11 @@ export interface ChequeBox {
 }
 
 export interface ChequeConfig {
-  imageId: string;
-  imageName: string;
-  width: number;
-  height: number;
+  bankName: string;
+  modelName: string;
+  imageUrl: string;
+  imageWidth: number;
+  imageHeight: number;
   printWidth: number;  // in mm
   printHeight: number; // in mm
   boxes: ChequeBox[];
@@ -28,21 +31,22 @@ export interface ChequeConfig {
 }
 
 export interface ChequeDetails {
-  [key: string]: string;
+  [key: string]: string | boolean;
 }
 
 @Injectable({ providedIn: 'root' })
 export class ChequeDataService {
   getChequeConfig(): Observable<ChequeConfig> {
     return of({
-      imageId: 'aaib',
-      imageName: 'aaib.jpg',
-      width: 1300,
-      height: 624,
+      bankName: 'AAIB',
+      modelName: 'Standard',
+      imageUrl: 'assets/aaib.jpg',
+      imageWidth: 1300,
+      imageHeight: 624,
       printWidth: 175,  // Standard cheque width in mm
       printHeight: 75,  // Standard cheque height in mm
       defaultFontSize: 16,
-      defaultFontFamily: 'Arial',
+      defaultFontFamily: 'San Serif',
       defaultFontWeight: 500,
       defaultTextColor: '#000000',
       boxes: [
@@ -66,6 +70,13 @@ export class ChequeDataService {
           ytl: 305.2,
           xbr: 1181.1,
           ybr: 360.9
+        },
+        {
+          Label: 'check-amount-words',
+          xtl: 235.39,
+          ytl: 225.245,
+          xbr: 1014.04,
+          ybr: 270.9
         },
         {
           Label: 'check-micr',
@@ -94,6 +105,13 @@ export class ChequeDataService {
           ytl: 370.19,
           xbr: 1265.43,
           ybr: 417.4
+        },
+        {
+          Label: 'check-crossing',
+          xtl: 889.0,
+          ytl: 19.25,
+          xbr: 980,
+          ybr: 72.4
         }
       ]
     });
@@ -101,13 +119,15 @@ export class ChequeDataService {
 
   getChequeDetails(): Observable<ChequeDetails> {
     return of({
-      'check-no': '123456',
-      'check-suppliername': 'Supplier Name',
-      'check-amount': '1,000.00 EGP',
-      'check-micr': '12345678901234567890',
-      'check-date': '2024-06-01',
-      'check-signature': 'Signature',
-      'check_debitor': 'Debitor Name'
+      'check-no': '',
+      'check-suppliername': 'سيتل للمدفوعات',
+      'check-amount': '1,234,567.89',
+      'check-amount-words': 'مليون ومئتان وثلاثة وأربعين ألف وخمسمئة وسبعة وستين وثمانية وتسعين',
+      'check-micr': '',
+      'check-date': '2025-06-01',
+      'check-signature': '',
+      'check_debitor': '',
+      'check-crossing': true,
     });
   }
 } 
