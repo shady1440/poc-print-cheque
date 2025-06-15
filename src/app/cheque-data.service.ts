@@ -43,8 +43,8 @@ export class ChequeDataService {
       imageUrl: 'assets/aaib.jpg',
       imageWidth: 1300,
       imageHeight: 624,
-      printWidth: 175,  // Standard cheque width in mm
-      printHeight: 75,  // Standard cheque height in mm
+      printWidth: 172,  // Standard cheque width in mm
+      printHeight: 82,  // Standard cheque height in mm
       defaultFontSize: 16,
       defaultFontFamily: 'San Serif',
       defaultFontWeight: 500,
@@ -121,7 +121,7 @@ export class ChequeDataService {
       imageUrl: 'assets/cib.jpg',
       imageWidth: 1300,
       imageHeight: 624,
-      printWidth: 166,
+      printWidth: 168,
       printHeight: 82,  
       defaultFontSize: 16,
       defaultFontFamily: 'San Serif',
@@ -176,6 +176,20 @@ export class ChequeDataService {
           ytl: 424.68,
           xbr: 1131.18,
           ybr: 503.26
+        },
+        {
+          Label: 'check-amount-words',
+          xtl: 280.13,
+          ytl: 246.61,
+          xbr: 708.8,
+          ybr: 350
+        },
+        {
+          Label: 'check-crossing',
+          xtl: 832,
+          ytl: 57.67,
+          xbr: 277.62,
+          ybr: 121.21
         }
       ]
     },
@@ -249,7 +263,7 @@ export class ChequeDataService {
       imageUrl: 'assets/fab.jpg',
       imageWidth: 1300,
       imageHeight: 624,
-      printWidth: 166,
+      printWidth: 170,
       printHeight: 83,
       defaultFontSize: 16,
       defaultFontFamily: 'San Serif',
@@ -313,7 +327,7 @@ export class ChequeDataService {
       imageUrl: 'assets/qnb.jpg',
       imageWidth: 1300,
       imageHeight: 624,
-      printWidth: 166,
+      printWidth: 168,
       printHeight: 83,
       defaultFontSize: 16,
       defaultFontFamily: 'San Serif',
