@@ -52,7 +52,8 @@ export class ChequeAnnotationComponent implements OnInit {
   ) {
     this.form = this.fb.group({
       bank: ['AAIB'],
-      model: ['Standard']
+      model: ['Standard'],
+      debug: [false]
     });
   }
 
@@ -196,6 +197,8 @@ export class ChequeAnnotationComponent implements OnInit {
     let chequeHtml = chequeContainer.outerHTML;
     let chequeStyles = '';
 
+    const debug = this.form.get('debug')?.value;
+
     if (this.printOnA4) {
       // On A4, render cheque at real size (in mm), bottom-aligned, no scaling
       chequeHtml = `<div class='a4-print-area'><div class='cheque-bottom-align'>${chequeHtml}</div></div>`;
@@ -230,29 +233,35 @@ export class ChequeAnnotationComponent implements OnInit {
     } else {
       // Custom cheque size, use scaling
       chequeStyles = `
-        .cheque-container {
-          width: ${this.chequeConfig.printWidth}mm !important;
-          height: ${this.chequeConfig.printHeight}mm !important;
-          position: relative;
-          transform-origin: top left;
-          transform: scale(${scaleFactor});
-        }
-        body {
-          margin: 0;
-          padding: 0;
-          width: ${this.chequeConfig.printWidth}mm;
-          height: ${this.chequeConfig.printHeight}mm;
-          overflow: hidden;
+        @media print {
+          @page {
+            size: ${this.chequeConfig.printWidth}mm ${this.chequeConfig.printHeight}mm;
+            margin: 0;
+          }
+          html, body {
+            width: ${this.chequeConfig.printWidth}mm;
+            height: ${this.chequeConfig.printHeight}mm;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden;
+            border: ${debug ? '2px solid red !important' : 'none'};
+          }
+          .cheque-container {
+            width: ${this.chequeConfig.printWidth}mm !important;
+            height: ${this.chequeConfig.printHeight}mm !important;
+            position: relative;
+            transform-origin: top left;
+            transform: scale(${scaleFactor});
+            margin: 0;
+            padding: 0;
+            border: none;
+          }
         }
       `;
     }
 
     // Common styles
     chequeStyles += `
-      @page {
-        size: ${this.printOnA4 ? 'A4' : `${this.chequeConfig.printWidth}mm ${this.chequeConfig.printHeight}mm`};
-        margin: 0;
-      }
       .annotation-box {
         position: absolute;
         border: none;
