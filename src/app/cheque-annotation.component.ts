@@ -193,65 +193,84 @@ export class ChequeAnnotationComponent implements OnInit {
     // Calculate scale factor to match physical cheque size
     const scaleFactor = (this.chequeConfig.printWidth * this.MM_TO_PX) / this.chequeConfig.imageWidth;
 
-    // Create print-specific styles
-    const styles = `
-      <style>
-        @page {
-          size: ${this.printOnA4 ? 'A4' : `${this.chequeConfig.printWidth}mm ${this.chequeConfig.printHeight}mm`};
-          margin: 0;
-        }
+    let chequeHtml = chequeContainer.outerHTML;
+    let chequeStyles = '';
 
-        body {
+    if (this.printOnA4) {
+      // On A4, render cheque at real size (in mm), bottom-aligned, no scaling
+      chequeHtml = `<div class='a4-print-area'><div class='cheque-bottom-align'>${chequeHtml}</div></div>`;
+      chequeStyles = `
+        .a4-print-area {
+          position: relative;
+          width: 210mm;
+          height: 297mm;
+          border: 2px solid red !important;
+        }
+        .cheque-bottom-align {
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          transform: translateX(-50%);
+        }
+        .cheque-container {
+          width: ${this.chequeConfig.printWidth}mm !important;
+          height: ${this.chequeConfig.printHeight}mm !important;
+          position: relative;
+          transform: none !important;
+          border: 2px solid blue !important;
+        }
+        body, html {
           margin: 0;
           padding: 0;
-          width: ${this.printOnA4 ? '210mm' : `${this.chequeConfig.printWidth}mm`};
-          height: ${this.printOnA4 ? '297mm' : `${this.chequeConfig.printHeight}mm`};
+          width: 210mm;
+          height: 297mm;
           overflow: hidden;
-          ${this.printOnA4 ? 'display: flex; flex-direction: column; justify-content: flex-end; align-items: center;' : ''}
         }
-
+      `;
+    } else {
+      // Custom cheque size, use scaling
+      chequeStyles = `
         .cheque-container {
           width: ${this.chequeConfig.printWidth}mm !important;
           height: ${this.chequeConfig.printHeight}mm !important;
           position: relative;
           transform-origin: top left;
           transform: scale(${scaleFactor});
-          ${this.printOnA4 ? 'margin: 0 auto 0 auto;' : ''}
         }
-
-        .annotation-box {
-          position: absolute;
-          border: none;
-        }
-
-        .cheque-value {
-          background: none;
-          color: ${this.chequeConfig.defaultTextColor};
-          font-family: ${this.chequeConfig.defaultFontFamily};
-          font-weight: ${this.chequeConfig.defaultFontWeight};
+        body {
+          margin: 0;
           padding: 0;
-          position: absolute;
-          white-space: nowrap;
-          transform-origin: top left;
-          transform: scale(1);
+          width: ${this.chequeConfig.printWidth}mm;
+          height: ${this.chequeConfig.printHeight}mm;
+          overflow: hidden;
         }
+      `;
+    }
 
-        /* Hide print button and other UI elements */
-        .print-button, .label, .cheque-image {
-          display: none !important;
-        }
-
-        /* A4 specific styles */
-        @media print {
-          body {
-            ${this.printOnA4 ? 'min-height: 297mm;' : ''}
-          }
-          
-          .cheque-container {
-            ${this.printOnA4 ? 'margin-bottom: 0 !important;' : ''}
-          }
-        }
-      </style>
+    // Common styles
+    chequeStyles += `
+      @page {
+        size: ${this.printOnA4 ? 'A4' : `${this.chequeConfig.printWidth}mm ${this.chequeConfig.printHeight}mm`};
+        margin: 0;
+      }
+      .annotation-box {
+        position: absolute;
+        border: none;
+      }
+      .cheque-value {
+        background: none;
+        color: ${this.chequeConfig.defaultTextColor};
+        font-family: ${this.chequeConfig.defaultFontFamily};
+        font-weight: ${this.chequeConfig.defaultFontWeight};
+        padding: 0;
+        position: absolute;
+        white-space: nowrap;
+        transform-origin: top left;
+        transform: scale(1);
+      }
+      .print-button, .label, .cheque-image {
+        display: none !important;
+      }
     `;
 
     // Create the print document
@@ -260,15 +279,13 @@ export class ChequeAnnotationComponent implements OnInit {
       <html>
         <head>
           <title>Print Cheque - ${this.chequeConfig.bankName} ${this.chequeConfig.modelName}</title>
-          ${styles}
+          <style>${chequeStyles}</style>
         </head>
         <body>
-          ${chequeContainer.outerHTML}
+          ${chequeHtml}
           <script>
             window.onload = function() {
-              // Force print dialog
               window.print();
-              // Close window after printing
               window.onafterprint = function() {
                 window.close();
               };

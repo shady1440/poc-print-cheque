@@ -178,6 +178,262 @@ export class ChequeDataService {
           ybr: 503.26
         }
       ]
+    },
+    'ADIB-Standard': {
+      bankName: 'ADIB',
+      modelName: 'Standard',
+      imageUrl: 'assets/adib.jpg',
+      imageWidth: 1300,
+      imageHeight: 624,
+      printWidth: 175,  // Standard cheque width in mm
+      printHeight: 75,  // Standard cheque height in mm
+      defaultFontSize: 16,
+      defaultFontFamily: 'San Serif',
+      defaultFontWeight: 500,
+      defaultTextColor: '#000000',
+      boxes: [
+        {
+          Label: 'check-no',
+          xtl: 155.87,
+          ytl: 55.54,
+          xbr: 381.5,
+          ybr: 123.91
+        },
+        {
+          Label: 'check-suppliername',
+          xtl: 365.27,
+          ytl: 138.44,
+          xbr: 949.0,
+          ybr: 217.92
+        },
+        {
+          Label: 'check-amount',
+          xtl: 869.52,
+          ytl: 257.24,
+          xbr: 1232.75,
+          ybr: 325.61
+        },
+        {
+          Label: 'check-micr',
+          xtl: 61.0,
+          ytl: 517.91,
+          xbr: 1091.73,
+          ybr: 614.49
+        },
+        {
+          Label: 'check-date',
+          xtl: 931.06,
+          ytl: 72.63,
+          xbr: 1184.0,
+          ybr: 136.73
+        },
+        {
+          Label: 'check_debitor',
+          xtl: 47.3,
+          ytl: 321.3,
+          xbr: 449.0,
+          ybr: 367.49
+        },
+        {
+          Label: 'check-signature',
+          xtl: 619.96,
+          ytl: 430.73,
+          xbr: 1177.2,
+          ybr: 485.43
+        }
+      ]
+    },
+    'FAB-Standard': {
+      bankName: 'FAB',
+      modelName: 'Standard',
+      imageUrl: 'assets/fab.jpg',
+      imageWidth: 1300,
+      imageHeight: 624,
+      printWidth: 175,  // Standard cheque width in mm
+      printHeight: 75,  // Standard cheque height in mm
+      defaultFontSize: 16,
+      defaultFontFamily: 'San Serif',
+      defaultFontWeight: 500,
+      defaultTextColor: '#000000',
+      boxes: [
+        {
+          Label: 'check-no',
+          xtl: 552.37,
+          ytl: 69.11,
+          xbr: 700.22,
+          ybr: 126.42
+        },
+        {
+          Label: 'check-suppliername',
+          xtl: 210.15,
+          ytl: 185.4,
+          xbr: 1117.2,
+          ybr: 234.41
+        },
+        {
+          Label: 'check-amount',
+          xtl: 932.8,
+          ytl: 71.6,
+          xbr: 1243.46,
+          ybr: 137.22
+        },
+        {
+          Label: 'check-micr',
+          xtl: 119.61,
+          ytl: 499.38,
+          xbr: 1002.57,
+          ybr: 584.1
+        },
+        {
+          Label: 'check-date',
+          xtl: 481.77,
+          ytl: 311.7,
+          xbr: 690.26,
+          ybr: 354.0
+        },
+        {
+          Label: 'check_debitor',
+          xtl: 274.11,
+          ytl: 419.64,
+          xbr: 669.49,
+          ybr: 467.81
+        },
+        {
+          Label: 'check-signature',
+          xtl: 814.02,
+          ytl: 375.61,
+          xbr: 1137.96,
+          ybr: 453.69
+        }
+      ]
+    },
+    'QNB-Standard': {
+      bankName: 'QNB',
+      modelName: 'Standard',
+      imageUrl: 'assets/qnb.jpg',
+      imageWidth: 1300,
+      imageHeight: 624,
+      printWidth: 175,  // Standard cheque width in mm
+      printHeight: 75,  // Standard cheque height in mm
+      defaultFontSize: 16,
+      defaultFontFamily: 'San Serif',
+      defaultFontWeight: 500,
+      defaultTextColor: '#000000',
+      boxes: [
+        {
+          Label: 'check-no',
+          xtl: 986.79,
+          ytl: 42.78,
+          xbr: 1178.67,
+          ybr: 95.94
+        },
+        {
+          Label: 'check-suppliername',
+          xtl: 280.76,
+          ytl: 187.31,
+          xbr: 1110.55,
+          ybr: 251.27
+        },
+        {
+          Label: 'check-amount',
+          xtl: 1026.66,
+          ytl: 265.4,
+          xbr: 1242.6,
+          ybr: 352.61
+        },
+        {
+          Label: 'check-micr',
+          xtl: 62.3,
+          ytl: 537.0,
+          xbr: 1019.19,
+          ybr: 600.1
+        },
+        {
+          Label: 'check-date',
+          xtl: 879.64,
+          ytl: 98.43,
+          xbr: 1171.19,
+          ybr: 161.56
+        },
+        {
+          Label: 'check_debitor',
+          xtl: 56.49,
+          ytl: 394.97,
+          xbr: 427.78,
+          ybr: 423.21
+        },
+        {
+          Label: 'check-signature',
+          xtl: 650.39,
+          ytl: 443.14,
+          xbr: 1204.42,
+          ybr: 512.09
+        }
+      ]
+    },
+    'BDC-Standard': {
+      bankName: 'BDC',
+      modelName: 'Standard',
+      imageUrl: 'assets/bdc.jpg',
+      imageWidth: 1300,
+      imageHeight: 624,
+      printWidth: 175,  // Standard cheque width in mm
+      printHeight: 75,  // Standard cheque height in mm
+      defaultFontSize: 16,
+      defaultFontFamily: 'San Serif',
+      defaultFontWeight: 500,
+      defaultTextColor: '#000000',
+      boxes: [
+        {
+          Label: 'check-no',
+          xtl: 493.4,
+          ytl: 84.15,
+          xbr: 741.75,
+          ybr: 126.51
+        },
+        {
+          Label: 'check-suppliername',
+          xtl: 273.28,
+          ytl: 172.19,
+          xbr: 947.75,
+          ybr: 239.47
+        },
+        {
+          Label: 'check-amount',
+          xtl: 980.1,
+          ytl: 288.48,
+          xbr: 1228.5,
+          ybr: 350.74
+        },
+        {
+          Label: 'check-micr',
+          xtl: 48.18,
+          ytl: 490.32,
+          xbr: 1208.57,
+          ybr: 565.08
+        },
+        {
+          Label: 'check-date',
+          xtl: 943.6,
+          ytl: 124.02,
+          xbr: 1162.88,
+          ybr: 168.87
+        },
+        {
+          Label: 'check_debitor',
+          xtl: 3.33,
+          ytl: 392.31,
+          xbr: 321.46,
+          ybr: 424.7
+        },
+        {
+          Label: 'check-signature',
+          xtl: 921.17,
+          ytl: 371.54,
+          xbr: 1222.69,
+          ybr: 418.06
+        }
+      ]
     }
   };
 
