@@ -36,8 +36,8 @@ export interface ChequeDetails {
 
 @Injectable({ providedIn: 'root' })
 export class ChequeDataService {
-  getChequeConfig(): Observable<ChequeConfig> {
-    return of({
+  private readonly chequeTemplates: Record<string, ChequeConfig> = {
+    'AAIB-Standard': {
       bankName: 'AAIB',
       modelName: 'Standard',
       imageUrl: 'assets/aaib.jpg',
@@ -114,7 +114,90 @@ export class ChequeDataService {
           ybr: 72.4
         }
       ]
+    },
+    'CIB-Standard': {
+      bankName: 'CIB',
+      modelName: 'Standard',
+      imageUrl: 'assets/cib.jpg',
+      imageWidth: 1300,
+      imageHeight: 624,
+      printWidth: 175,  // Standard cheque width in mm
+      printHeight: 75,  // Standard cheque height in mm
+      defaultFontSize: 16,
+      defaultFontFamily: 'San Serif',
+      defaultFontWeight: 500,
+      defaultTextColor: '#000000',
+      boxes: [
+        {
+          Label: 'check-no',
+          xtl: 920.51,
+          ytl: 82.75,
+          xbr: 1220.63,
+          ybr: 135.42
+        },
+        {
+          Label: 'check-suppliername',
+          xtl: 280.13,
+          ytl: 146.29,
+          xbr: 908.8,
+          ybr: 205.64
+        },
+        {
+          Label: 'check-amount',
+          xtl: 959.8,
+          ytl: 246.61,
+          xbr: 1210.6,
+          ybr: 300.11
+        },
+        {
+          Label: 'check-micr',
+          xtl: 46.89,
+          ytl: 522.49,
+          xbr: 1080.18,
+          ybr: 595.22
+        },
+        {
+          Label: 'check-date',
+          xtl: 102.06,
+          ytl: 57.67,
+          xbr: 277.62,
+          ybr: 121.21
+        },
+        {
+          Label: 'check_debitor',
+          xtl: 58.59,
+          ytl: 366.16,
+          xbr: 714.85,
+          ybr: 418.82
+        },
+        {
+          Label: 'check-signature',
+          xtl: 819.35,
+          ytl: 424.68,
+          xbr: 1131.18,
+          ybr: 503.26
+        }
+      ]
+    }
+  };
+
+  getChequeConfig(bankName: string, modelName: string): Observable<ChequeConfig> {
+    const templateKey = `${bankName}-${modelName}`;
+    const template = this.chequeTemplates[templateKey];
+    
+    if (!template) {
+      throw new Error(`No template found for ${bankName} ${modelName}`);
+    }
+    
+    return of(template);
+  }
+
+  getAvailableTemplates(): Observable<Array<{bankName: string, modelName: string}>> {
+    const templates = Object.keys(this.chequeTemplates).map(key => {
+      const [bankName, modelName] = key.split('-');
+      return { bankName, modelName };
     });
+    return of(templates);
   }
 
   getChequeDetails(): Observable<ChequeDetails> {

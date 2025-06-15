@@ -1,11 +1,13 @@
-import { NgFor, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { ChequeBox, ChequeConfig, ChequeDetails, ChequeField } from './cheque-data.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+import { ChequeBox, ChequeConfig, ChequeDataService, ChequeDetails, ChequeField } from './cheque-data.service';
 
 @Component({
   selector: 'app-cheque-annotation',
   standalone: true,
-  imports: [NgIf, NgFor],
+  imports: [AsyncPipe, ReactiveFormsModule],
   templateUrl: './cheque-annotation.component.html',
   styleUrl: './cheque-annotation.component.scss'
 })
@@ -15,6 +17,8 @@ export class ChequeAnnotationComponent implements OnInit {
   boxes: ChequeBox[] = [];
   readonly MM_TO_PX = 3.7795275591; // 1mm = 3.7795275591px at 96 DPI
   printOnA4 = false;
+  availableTemplates$ = new BehaviorSubject<Array<{bankName: string, modelName: string}>>([]);
+  form: FormGroup;
 
   // Font size multipliers for different fields
   fontSizeMultipliers: Record<ChequeField, number> = {
@@ -42,6 +46,16 @@ export class ChequeAnnotationComponent implements OnInit {
     'check-crossing': 32
   };
 
+  constructor(
+    private chequeDataService: ChequeDataService,
+    private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      bank: ['AAIB'],
+      model: ['Standard']
+    });
+  }
+
   ngOnInit() {
     if (!this.chequeConfig) return;
     this.boxes = this.chequeConfig.boxes;
@@ -61,6 +75,34 @@ export class ChequeAnnotationComponent implements OnInit {
     if (savedA4Printing) {
       this.printOnA4 = JSON.parse(savedA4Printing);
     }
+
+    // Load available templates
+    this.loadTemplates();
+
+    // Subscribe to form changes
+    this.form.valueChanges.subscribe(values => {
+      this.loadChequeConfig();
+    });
+  }
+
+  loadTemplates() {
+    this.chequeDataService.getAvailableTemplates().subscribe(templates => {
+      this.availableTemplates$.next(templates);
+      if (templates.length > 0) {
+        this.form.patchValue({
+          bank: templates[0].bankName,
+          model: templates[0].modelName
+        });
+      }
+    });
+  }
+
+  loadChequeConfig() {
+    const { bank, model } = this.form.value;
+    this.chequeDataService.getChequeConfig(bank, model).subscribe(config => {
+      this.chequeConfig = config;
+      this.boxes = config.boxes;
+    });
   }
 
   toggleCrossing(event: Event) {

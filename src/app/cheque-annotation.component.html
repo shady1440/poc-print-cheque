@@ -2,7 +2,25 @@
   <div class="cheque-wrapper">
     <div class="config-panel">
       <h3>Cheque Configuration</h3>
-      <div class="config-controls">
+      <form [formGroup]="form" class="config-controls">
+        <div class="config-control">
+          <label for="bank">Bank:</label>
+          <select id="bank" formControlName="bank">
+            @for (template of availableTemplates$ | async; track template.bankName) {
+              <option [value]="template.bankName">{{ template.bankName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="config-control">
+          <label for="model">Model:</label>
+          <select id="model" formControlName="model">
+            @for (template of availableTemplates$ | async; track template.modelName) {
+              <option [value]="template.modelName">{{ template.modelName }}</option>
+            }
+          </select>
+        </div>
+
         <div class="config-control">
           <label>
             <input 
@@ -23,7 +41,7 @@
             Print on A4 (Bottom Position)
           </label>
         </div>
-      </div>
+      </form>
     </div>
 
     <div

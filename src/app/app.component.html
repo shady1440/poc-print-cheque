@@ -1,8 +1,10 @@
-@if (chequeConfig && chequeDetails) {
-  <app-cheque-annotation 
-    [chequeConfig]="chequeConfig" 
-    [chequeDetails]="chequeDetails"
-  ></app-cheque-annotation>
-}
+<div class="container">
+  @if ((chequeConfig$ | async) && (chequeDetails$ | async)) {
+    <app-cheque-annotation
+      [chequeConfig]="(chequeConfig$ | async)!"
+      [chequeDetails]="(chequeDetails$ | async)!"
+    ></app-cheque-annotation>
+  }
+</div>
 
 <router-outlet />
