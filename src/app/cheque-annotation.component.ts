@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
@@ -7,7 +7,7 @@ import { ChequeBox, ChequeConfig, ChequeDataService, ChequeDetails, ChequeField 
 @Component({
   selector: 'app-cheque-annotation',
   standalone: true,
-  imports: [AsyncPipe, ReactiveFormsModule],
+  imports: [AsyncPipe, ReactiveFormsModule, NgStyle],
   templateUrl: './cheque-annotation.component.html',
   styleUrl: './cheque-annotation.component.scss'
 })
@@ -35,16 +35,19 @@ export class ChequeAnnotationComponent implements OnInit {
 
   // Base font sizes for different fields
   baseFontSizes: Record<ChequeField, number> = {
-    'check-no': 16,
-    'check-suppliername': 16,
-    'check-amount': 16,
-    'check-amount-words': 16,
-    'check-micr': 16,
-    'check-date': 16,
-    'check-signature': 16,
-    'check_debitor': 16,
+    'check-no': 17,
+    'check-suppliername': 17,
+    'check-amount': 17,
+    'check-amount-words': 17,
+    'check-micr': 17,
+    'check-date': 17,
+    'check-signature': 17,
+    'check_debitor': 17,
     'check-crossing': 32
   };
+
+  // Calibration constant for A4 font size (mm per px)
+  readonly A4_FONT_MM_PER_PX = 0.10; // Start with 0.18, tweak as needed
 
   constructor(
     private chequeDataService: ChequeDataService,
@@ -191,13 +194,43 @@ export class ChequeAnnotationComponent implements OnInit {
     const labels = chequeContainer.querySelectorAll('.label');
     labels.forEach(label => label.remove());
 
+    // If debug, add cheque image back (faded) and show annotation box borders/labels
+    const debug = this.form.get('debug')?.value;
+    if (debug && chequeContainer) {
+      // Add faded cheque image as background
+      const chequeImage = document.createElement('img');
+      chequeImage.src = this.chequeConfig.imageUrl;
+      chequeImage.style.position = 'absolute';
+      chequeImage.style.left = '0';
+      chequeImage.style.top = '0';
+      chequeImage.style.width = '100%';
+      chequeImage.style.height = '100%';
+      chequeImage.style.opacity = '0.2';
+      chequeImage.style.pointerEvents = 'none';
+      chequeImage.className = 'cheque-debug-image';
+      chequeContainer.insertBefore(chequeImage, chequeContainer.firstChild);
+
+      // Add field label to each annotation box
+      const annotationBoxes = chequeContainer.querySelectorAll('.annotation-box');
+      annotationBoxes.forEach(box => {
+        const label = document.createElement('div');
+        label.textContent = box.getAttribute('data-label') || '';
+        label.style.position = 'absolute';
+        label.style.top = '0';
+        label.style.left = '0';
+        label.style.fontSize = '10px';
+        label.style.background = 'rgba(255,255,0,0.5)';
+        label.style.color = '#000';
+        label.style.zIndex = '10';
+        box.appendChild(label);
+      });
+    }
+
     // Calculate scale factor to match physical cheque size
     const scaleFactor = (this.chequeConfig.printWidth * this.MM_TO_PX) / this.chequeConfig.imageWidth;
 
     let chequeHtml = chequeContainer.outerHTML;
     let chequeStyles = '';
-
-    const debug = this.form.get('debug')?.value;
 
     if (this.printOnA4) {
       // On A4, render cheque at real size (in mm), bottom-aligned, no scaling
@@ -207,20 +240,27 @@ export class ChequeAnnotationComponent implements OnInit {
           position: relative;
           width: 210mm;
           height: 297mm;
-          border: 2px solid red !important;
+          border: ${debug ? '2px solid red !important' : 'none'};
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
         .cheque-bottom-align {
           position: absolute;
           left: 50%;
-          bottom: 0;
+          bottom: 20mm; /* Add some margin from bottom */
           transform: translateX(-50%);
+          border: ${debug ? '2px solid green !important' : 'none'};
         }
         .cheque-container {
           width: ${this.chequeConfig.printWidth}mm !important;
           height: ${this.chequeConfig.printHeight}mm !important;
           position: relative;
           transform: none !important;
-          border: 2px solid blue !important;
+          border: ${debug ? '2px solid blue !important' : 'none'};
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
         body, html {
           margin: 0;
@@ -228,6 +268,13 @@ export class ChequeAnnotationComponent implements OnInit {
           width: 210mm;
           height: 297mm;
           overflow: hidden;
+          box-sizing: border-box;
+        }
+        @media print {
+          @page {
+            size: A4;
+            margin: 0;
+          }
         }
       `;
     } else {
@@ -264,7 +311,8 @@ export class ChequeAnnotationComponent implements OnInit {
     chequeStyles += `
       .annotation-box {
         position: absolute;
-        border: none;
+        border: ${debug ? '1px dashed orange' : 'none'};
+        box-sizing: border-box;
       }
       .cheque-value {
         background: none;
@@ -277,8 +325,16 @@ export class ChequeAnnotationComponent implements OnInit {
         transform-origin: top left;
         transform: scale(1);
       }
-      .print-button, .label, .cheque-image {
+      .print-button, .label {
         display: none !important;
+      }
+      .cheque-image {
+        display: ${debug ? 'block' : 'none'} !important;
+      }
+      .cheque-debug-image {
+        display: block !important;
+        opacity: 0.2 !important;
+        pointer-events: none;
       }
     `;
 
@@ -307,5 +363,42 @@ export class ChequeAnnotationComponent implements OnInit {
     printWindow.document.open();
     printWindow.document.write(printContent);
     printWindow.document.close();
+  }
+
+  /**
+   * Returns the style object for an annotation box, using mm for A4 mode and px otherwise.
+   */
+  getBoxStyle(box: ChequeBox): {[key: string]: string} {
+    if (this.printOnA4) {
+      // Calculate mm per px for both axes
+      const mmPerPxX = this.chequeConfig.printWidth / this.chequeConfig.imageWidth;
+      const mmPerPxY = this.chequeConfig.printHeight / this.chequeConfig.imageHeight;
+      // Convert px to mm for font size using calibration constant
+      const fontSizePx = this.getFontSize(box.Label);
+      const fontSizeMm = fontSizePx * this.A4_FONT_MM_PER_PX;
+      return {
+        left: `${box.xtl * mmPerPxX}mm`,
+        top: `${box.ytl * mmPerPxY}mm`,
+        width: `${(box.xbr - box.xtl) * mmPerPxX}mm`,
+        height: `${(box.ybr - box.ytl) * mmPerPxY}mm`,
+        'font-family': String(box.FontFamily || this.chequeConfig.defaultFontFamily),
+        'font-size': `${fontSizeMm}mm`,
+        'font-weight': String(box.FontWeight || this.chequeConfig.defaultFontWeight),
+        color: String(box.TextColor || this.chequeConfig.defaultTextColor),
+        position: 'absolute',
+      };
+    } else {
+      return {
+        left: `${box.xtl}px`,
+        top: `${box.ytl}px`,
+        width: `${box.xbr - box.xtl}px`,
+        height: `${box.ybr - box.ytl}px`,
+        'font-family': String(box.FontFamily || this.chequeConfig.defaultFontFamily),
+        'font-size': `${this.getFontSize(box.Label)}px`,
+        'font-weight': String(box.FontWeight || this.chequeConfig.defaultFontWeight),
+        color: String(box.TextColor || this.chequeConfig.defaultTextColor),
+        position: 'absolute',
+      };
+    }
   }
 }

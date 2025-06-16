@@ -69,14 +69,7 @@
         @if (chequeDetails[box.Label]) {
           <div
             class="annotation-box"
-            [style.left.px]="box.xtl"
-            [style.top.px]="box.ytl"
-            [style.width.px]="box.xbr - box.xtl"
-            [style.height.px]="box.ybr - box.ytl"
-            [style.font-family]="box.FontFamily || chequeConfig.defaultFontFamily"
-            [style.font-size.px]="getFontSize(box.Label)"
-            [style.font-weight]="box.FontWeight || chequeConfig.defaultFontWeight"
-            [style.color]="box.TextColor || chequeConfig.defaultTextColor"
+            [ngStyle]="getBoxStyle(box)"
           >
             {{ getDisplayValue(box.Label, chequeDetails[box.Label]) }}
           </div>
