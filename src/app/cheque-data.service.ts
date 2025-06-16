@@ -228,6 +228,13 @@ export class ChequeDataService {
           ybr: 325.61
         },
         {
+          Label: 'check-amount-words',
+          xtl: 205.27,
+          ytl: 227.24,
+          xbr: 769.52,
+          ybr: 325.61
+        },
+        {
           Label: 'check-micr',
           xtl: 61.0,
           ytl: 517.91,
@@ -254,6 +261,13 @@ export class ChequeDataService {
           ytl: 430.73,
           xbr: 1177.2,
           ybr: 485.43
+        },
+        {
+          Label: 'check-crossing',
+          xtl: 831.06,
+          ytl: 62.63,
+          xbr: 884.0,
+          ybr: 126.73
         }
       ]
     },
