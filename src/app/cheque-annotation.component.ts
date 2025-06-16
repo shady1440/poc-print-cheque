@@ -396,4 +396,10 @@ export class ChequeAnnotationComponent implements OnInit {
       };
     }
   }
+
+  // Scale factor for A4 preview (not print)
+  get a4PreviewScale(): number {
+    const A4_PREVIEW_PX = 800; // width of A4 preview in px
+    return A4_PREVIEW_PX / this.IMAGE_WIDTH;
+  }
 }

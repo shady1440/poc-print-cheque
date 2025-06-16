@@ -53,30 +53,65 @@
       </form>
     </div>
 
-    <div
-      class="cheque-container"
-      [style.width.px]="IMAGE_WIDTH"
-      [style.height.px]="IMAGE_HEIGHT"
-    >
-      <img
-        [src]="chequeConfig.imageUrl"
+    @if (printOnA4) {
+      <div class="a4-preview">
+        <div class="cheque-bottom-align">
+          <div class="cheque-center-wrapper">
+            <div
+              class="cheque-container"
+              [style.width.px]="IMAGE_WIDTH"
+              [style.height.px]="IMAGE_HEIGHT"
+              [style.transform]="'scale(' + a4PreviewScale + ')'"
+              style="transform-origin: bottom center;"
+            >
+              <img
+                [src]="chequeConfig.imageUrl"
+                [style.width.px]="IMAGE_WIDTH"
+                [style.height.px]="IMAGE_HEIGHT"
+                [alt]="chequeConfig.bankName + ' ' + chequeConfig.modelName"
+                class="cheque-image"
+              />
+              @for (box of chequeConfig.boxes; track box.Label) {
+                @if (chequeDetails[box.Label]) {
+                  <div
+                    class="annotation-box"
+                    [ngStyle]="getBoxStyle(box)"
+                    [attr.data-label]="box.Label"
+                  >
+                    {{ getDisplayValue(box.Label, chequeDetails[box.Label]) }}
+                  </div>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div
+        class="cheque-container"
         [style.width.px]="IMAGE_WIDTH"
         [style.height.px]="IMAGE_HEIGHT"
-        [alt]="chequeConfig.bankName + ' ' + chequeConfig.modelName"
-        class="cheque-image"
-      />
-      @for (box of chequeConfig.boxes; track box.Label) {
-        @if (chequeDetails[box.Label]) {
-          <div
-            class="annotation-box"
-            [ngStyle]="getBoxStyle(box)"
-            [attr.data-label]="box.Label"
-          >
-            {{ getDisplayValue(box.Label, chequeDetails[box.Label]) }}
-          </div>
+      >
+        <img
+          [src]="chequeConfig.imageUrl"
+          [style.width.px]="IMAGE_WIDTH"
+          [style.height.px]="IMAGE_HEIGHT"
+          [alt]="chequeConfig.bankName + ' ' + chequeConfig.modelName"
+          class="cheque-image"
+        />
+        @for (box of chequeConfig.boxes; track box.Label) {
+          @if (chequeDetails[box.Label]) {
+            <div
+              class="annotation-box"
+              [ngStyle]="getBoxStyle(box)"
+              [attr.data-label]="box.Label"
+            >
+              {{ getDisplayValue(box.Label, chequeDetails[box.Label]) }}
+            </div>
+          }
         }
-      }
-    </div>
+      </div>
+    }
     <button class="print-button" (click)="printCheque()">Print Cheque</button>
   </div>
 }
