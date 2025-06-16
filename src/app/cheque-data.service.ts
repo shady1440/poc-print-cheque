@@ -19,8 +19,6 @@ export interface ChequeConfig {
   bankName: string;
   modelName: string;
   imageUrl: string;
-  imageWidth: number;
-  imageHeight: number;
   printWidth: number;  // in mm
   printHeight: number; // in mm
   boxes: ChequeBox[];
@@ -41,8 +39,6 @@ export class ChequeDataService {
       bankName: 'AAIB',
       modelName: 'Standard',
       imageUrl: 'assets/aaib.jpg',
-      imageWidth: 1300,
-      imageHeight: 624,
       printWidth: 172,  // Standard cheque width in mm
       printHeight: 82,  // Standard cheque height in mm
       defaultFontSize: 16,
@@ -119,8 +115,6 @@ export class ChequeDataService {
       bankName: 'CIB',
       modelName: 'Standard',
       imageUrl: 'assets/cib.jpg',
-      imageWidth: 1300,
-      imageHeight: 624,
       printWidth: 168,
       printHeight: 82,  
       defaultFontSize: 16,
@@ -197,8 +191,6 @@ export class ChequeDataService {
       bankName: 'ADIB',
       modelName: 'Standard',
       imageUrl: 'assets/adib.jpg',
-      imageWidth: 1300,
-      imageHeight: 624,
       printWidth: 165,
       printHeight: 82,
       defaultFontSize: 16,
@@ -275,8 +267,6 @@ export class ChequeDataService {
       bankName: 'FAB',
       modelName: 'Standard',
       imageUrl: 'assets/fab.jpg',
-      imageWidth: 1300,
-      imageHeight: 624,
       printWidth: 170,
       printHeight: 83,
       defaultFontSize: 16,
@@ -353,8 +343,6 @@ export class ChequeDataService {
       bankName: 'QNB',
       modelName: 'Standard',
       imageUrl: 'assets/qnb.jpg',
-      imageWidth: 1300,
-      imageHeight: 624,
       printWidth: 168,
       printHeight: 83,
       defaultFontSize: 16,
@@ -431,8 +419,6 @@ export class ChequeDataService {
       bankName: 'BDC',
       modelName: 'Standard',
       imageUrl: 'assets/bdc.jpg',
-      imageWidth: 1300,
-      imageHeight: 624,
       printWidth: 168,
       printHeight: 82,
       defaultFontSize: 16,

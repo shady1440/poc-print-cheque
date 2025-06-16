@@ -19,6 +19,8 @@ export class ChequeAnnotationComponent implements OnInit {
   printOnA4 = false;
   availableTemplates$ = new BehaviorSubject<Array<{bankName: string, modelName: string}>>([]);
   form: FormGroup;
+  readonly IMAGE_WIDTH = 1300;
+  readonly IMAGE_HEIGHT = 624;
 
   // Font size multipliers for different fields
   fontSizeMultipliers: Record<ChequeField, number> = {
@@ -135,21 +137,6 @@ export class ChequeAnnotationComponent implements OnInit {
     return requiredFields.every(field => typeof data[field] === 'number');
   }
 
-  private isValidChequeField(label: string): label is ChequeField {
-    const validFields: ChequeField[] = [
-      'check-no',
-      'check-suppliername',
-      'check-amount',
-      'check-amount-words',
-      'check-micr',
-      'check-date',
-      'check-signature',
-      'check_debitor',
-      'check-crossing'
-    ];
-    return validFields.includes(label as ChequeField);
-  }
-
   adjustFontSize(field: ChequeField, increment: number) {
     this.fontSizeMultipliers[field] = Math.max(0.5, Math.min(3, this.fontSizeMultipliers[field] + increment));
     localStorage.setItem('chequeFontSizes', JSON.stringify(this.fontSizeMultipliers));
@@ -196,7 +183,7 @@ export class ChequeAnnotationComponent implements OnInit {
 
     // If debug, add cheque image back (faded) and show annotation box borders/labels
     const debug = this.form.get('debug')?.value;
-    if (debug && chequeContainer) {
+    if (debug && this.printOnA4 && chequeContainer) {
       // Add faded cheque image as background
       const chequeImage = document.createElement('img');
       chequeImage.src = this.chequeConfig.imageUrl;
@@ -227,7 +214,7 @@ export class ChequeAnnotationComponent implements OnInit {
     }
 
     // Calculate scale factor to match physical cheque size
-    const scaleFactor = (this.chequeConfig.printWidth * this.MM_TO_PX) / this.chequeConfig.imageWidth;
+    const scaleFactor = (this.chequeConfig.printWidth * this.MM_TO_PX) / this.IMAGE_WIDTH;
 
     let chequeHtml = chequeContainer.outerHTML;
     let chequeStyles = '';
@@ -248,7 +235,7 @@ export class ChequeAnnotationComponent implements OnInit {
         .cheque-bottom-align {
           position: absolute;
           left: 50%;
-          bottom: 20mm; /* Add some margin from bottom */
+          bottom: 5mm; /* Add some margin from bottom */
           transform: translateX(-50%);
           border: ${debug ? '2px solid green !important' : 'none'};
         }
@@ -371,8 +358,8 @@ export class ChequeAnnotationComponent implements OnInit {
   getBoxStyle(box: ChequeBox): {[key: string]: string} {
     if (this.printOnA4) {
       // Calculate mm per px for both axes
-      const mmPerPxX = this.chequeConfig.printWidth / this.chequeConfig.imageWidth;
-      const mmPerPxY = this.chequeConfig.printHeight / this.chequeConfig.imageHeight;
+      const mmPerPxX = this.chequeConfig.printWidth / this.IMAGE_WIDTH;
+      const mmPerPxY = this.chequeConfig.printHeight / this.IMAGE_HEIGHT;
       // Convert px to mm for font size using calibration constant
       const fontSizePx = this.getFontSize(box.Label);
       const fontSizeMm = fontSizePx * this.A4_FONT_MM_PER_PX;
@@ -386,6 +373,10 @@ export class ChequeAnnotationComponent implements OnInit {
         'font-weight': String(box.FontWeight || this.chequeConfig.defaultFontWeight),
         color: String(box.TextColor || this.chequeConfig.defaultTextColor),
         position: 'absolute',
+        display: 'flex',
+        'align-items': 'center',
+        'justify-content': 'center',
+        'text-align': 'center',
       };
     } else {
       return {
@@ -398,6 +389,10 @@ export class ChequeAnnotationComponent implements OnInit {
         'font-weight': String(box.FontWeight || this.chequeConfig.defaultFontWeight),
         color: String(box.TextColor || this.chequeConfig.defaultTextColor),
         position: 'absolute',
+        display: 'flex',
+        'align-items': 'center',
+        'justify-content': 'center',
+        'text-align': 'center',
       };
     }
   }
