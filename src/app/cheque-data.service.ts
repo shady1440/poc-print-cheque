@@ -495,6 +495,13 @@ export class ChequeDataService {
           ytl: 371.54,
           xbr: 1222.69,
           ybr: 418.06
+        },
+        {
+          Label: 'check-crossing',
+          xtl: 821.17,
+          ytl: 10.54,
+          xbr: 922.69,
+          ybr: 90.06
         }
       ]
     }
